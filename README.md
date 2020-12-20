@@ -4,9 +4,9 @@ Uses the "requests" library to get the content of each page and then parses it w
 
 ## Run Instructions
 To run, enter: <br />
-<code> git clone https://github.com/rohit-px2/Stock_Check.git Stock_Check </code> <br />
-<code> cd Stock_Check </code> <br />
-<code> cd src </code> <br />
-<code> python main.py </code> <br />
+<code> > git clone https://github.com/rohit-px2/Stock_Check.git Stock_Check </code> <br />
+<code> > cd Stock_Check </code> <br />
+<code> > cd src </code> <br />
+<code> > python main.py </code> <br />
 
 And enter your links!
