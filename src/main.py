@@ -1,9 +1,14 @@
 import stock_checker
+import sys
+import os
 
-def main():
+
+def main() -> None:
+    os.chdir("..")
+    file_name : str = os.getcwd() + "\links.txt"
+    txtfile = open(file_name)
     links = []
-    link = input("Paste your links here, and type \"end\" to end.")
-    while link != 'end':
+    for link in txtfile:
         links.append(link)
     stock_checker.check_stock(links)
     
