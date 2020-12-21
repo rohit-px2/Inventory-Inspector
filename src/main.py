@@ -8,7 +8,7 @@ def main() -> None:
     links = []
     for link in txtfile:
         links.append(link)
-    sleep_time : int = float(input("How many seconds to wait before checking again? \n"))
+    sleep_time : float = float(input("How many seconds to wait before checking again? \n"))
     stock_checker.check_stock(links, sleep_time)
     
 

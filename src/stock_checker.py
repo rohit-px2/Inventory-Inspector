@@ -10,11 +10,7 @@ from fake_useragent import UserAgent
 os.chdir("..")
 soundpath = os.getcwd() + "\\assets\\instock.mp3"
 jsonfp = os.getcwd() + "\websites\\"
-# Retailer classcodes and "out of stock" messages
-canadacomp = json.load(open(jsonfp + "canadacomputers.json"))
-bestbuy = json.load(open(jsonfp + "bestbuy.json"))
-memex = json.load(open(jsonfp + "memoryexpress.json"))
-newegg = json.load(open(jsonfp + "newegg.json"))
+
 
 # Fake Browser Agent
 user_agent = UserAgent()
