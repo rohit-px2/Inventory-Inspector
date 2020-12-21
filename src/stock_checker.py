@@ -6,6 +6,7 @@ from playsound import playsound
 from bs4 import BeautifulSoup
 import tldextract
 import os 
+from fake_useragent import UserAgent
 
 os.chdir("..")
 soundpath = os.getcwd() + "\\assets\\instock.mp3"
@@ -15,6 +16,11 @@ canadacomp = json.load(open(jsonfp + "canadacomputers.json"))
 bestbuy = json.load(open(jsonfp + "bestbuy.json"))
 memex = json.load(open(jsonfp + "memoryexpress.json"))
 newegg = json.load(open(jsonfp + "newegg.json"))
+
+# Fake Browser Agent
+user_agent = UserAgent()
+browser_header = {'User-Agent': user_agent.chrome}
+
 
 # Take in an array of strings, find which retailer they are from, check based on the corresponding JSON.
 def check_stock(links : list, sleep_time : float) -> None:
@@ -40,7 +46,7 @@ def check_stock(links : list, sleep_time : float) -> None:
         for link in links:
             if is_in_stock(link, getDict(storemap[link])):
                 playsound(soundpath)
-                print(link + "Is in stock!!!")
+                print(link + " Is in stock!!!")
         sleep(sleep_time)
 
 
@@ -70,7 +76,6 @@ def is_in_stock(link : str, data : dict) -> bool:
     """ Returns whether the item in link is in stock or not.
 
     Arguments:
-
     - link: The URL of the item.
 
     - data: The dictionary containing information regarding
@@ -81,7 +86,8 @@ def is_in_stock(link : str, data : dict) -> bool:
     
     Returns: bool
     """
-    page = requests.get(link)
+    global browser_header
+    page = requests.get(link, headers=browser_header)
     html = BeautifulSoup(page.content, 'html.parser')
     target_class : str = data["classCode"]
     data.pop("classCode")
