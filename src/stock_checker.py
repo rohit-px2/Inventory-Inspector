@@ -29,7 +29,6 @@ def check_stock(links : list, sleep_time : float) -> None:
 
     Returns: None
     """
-    global canadacomp, bestbuy, memex, newegg
     # Each string contains "\n" at the back which needs to be removed to get the website link.
     links = remove_newlines(links)
     storemap : dict[str, str] = {}
@@ -40,8 +39,8 @@ def check_stock(links : list, sleep_time : float) -> None:
     while(True):
         for link in links:
             if is_in_stock(link, getDict(storemap[link])):
-                playsound(soundpath)
                 print(link + " Is in stock!!!")
+                playsound(soundpath)
         sleep(sleep_time)
 
 
