@@ -1,5 +1,7 @@
 {
     "classCode" : "shippingAvailability_2RMa1",
-    "message" : "Sold out online",
-    "message2" : "Coming soon"
+    "messages": [
+        "Sold out online",
+        "Coming soon"
+    ]
 }

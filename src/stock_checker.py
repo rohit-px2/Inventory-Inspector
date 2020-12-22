@@ -84,11 +84,11 @@ def is_in_stock(link : str, data : dict) -> bool:
     page = requests.get(link, headers=browser_header)
     html = BeautifulSoup(page.content, 'html.parser')
     target_class : str = data["classCode"]
-    data.pop("classCode")
+    messages : list = data["messages"] # list[str]
     instock : bool = True
     target_html = str(html.find(class_=target_class))
-    for message in data:
-        if data[message] not in target_html and instock:
+    for message in messages:
+        if message not in target_html and instock:
             instock = True
         else:
             instock = False

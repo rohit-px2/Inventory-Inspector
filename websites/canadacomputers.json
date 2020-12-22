@@ -1,4 +1,6 @@
 {
     "classCode": "pi-prod-availability",
-    "message" : "Not Available Online"
+    "messages" : [
+        "Not Available Online"
+    ]
 }

@@ -1,4 +1,6 @@
 {
     "classCode": "c-capr-inventory-store",
-    "message" : "Out of Stock"
+    "messages": [
+        "Out of Stock"
+    ]
 }

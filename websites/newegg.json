@@ -1,4 +1,6 @@
 {
     "classCode" : "product-buy-box",
-    "message" : "Sold Out"
+    "messages": [
+        "Sold Out"
+    ]
 }
