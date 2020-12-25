@@ -7,9 +7,6 @@ from bs4 import BeautifulSoup
 import tldextract
 import os 
 from fake_useragent import UserAgent
-import concurrent.futures
-import multiprocessing
-import threading
 from PyQt5.QtWidgets import QTextBrowser
 
 os.chdir("..")
@@ -42,7 +39,6 @@ def check_stock(links : list, sleep_time : float, textarea : QTextBrowser, execu
         else:
             # Out of stock message is red
             textarea.append(links[i] + " Out of stock")
-    sleep(sleep_time)
 
 
 
@@ -69,6 +65,7 @@ def get_relevant_dict(domain : str) -> dict:
 
 
 def fetch_content(link : str):
+    ''' Fetches the content of the URL corresponding to link. '''
     global browser_header
     page = requests.get(link, headers=browser_header)
     print("Got a page: " + link)

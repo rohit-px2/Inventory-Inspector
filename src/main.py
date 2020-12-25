@@ -1,16 +1,14 @@
 import stock_checker
 import sys
 import os
+from main_window import MainWindow
+from PyQt5.QtWidgets import QApplication
 
-def main() -> None:
-    file_name : str = os.getcwd() + "\links.txt"
-    txtfile = open(file_name)
-    links = []
-    for link in txtfile:
-        links.append(link)
-    sleep_time : float = float(input("How many seconds to wait before checking again? \n"))
-    stock_checker.check_stock(links, sleep_time)
-    
+def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
-    main()
+    main()    
