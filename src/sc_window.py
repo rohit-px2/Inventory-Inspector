@@ -37,6 +37,9 @@ class StockWindow(QWidget):
         self.createUI()
         self.work_thread = threading.Thread(target=self.check_stock)
         self.work_thread.start()
+        # Since both threads (main & worker) are editing StockDisplayBox at the same time we need a lock
+        # to keep it thread-safe (both threads don't access at the same time).
+        self.lock = threading.Lock()
         
     
     def createUI(self) -> None:
@@ -70,12 +73,12 @@ class StockWindow(QWidget):
                 return
             self.should_continue = True
             self.sleep_interrupt.clear()
-            self.StockDisplayBox.append("Resumed checking stock.")
+            self.appendToBox("Resumed checking stock.")
             self.StartStopButton.setText("Stop")
         else:
             self.queue.put(STOP_CODE)
             self.sleep_interrupt.set()
-            self.StockDisplayBox.append("Pausing...")
+            self.appendToBox("Pausing...")
             self.StartStopButton.setText("Start")
         return
 
@@ -93,20 +96,20 @@ class StockWindow(QWidget):
                 # a separate thread we are using a message queue
                 # TODO Find a way to create alerts on separate thread without running into a QObject::setParent error.
                 if not self.queue.empty() and self.queue.get() == STOP_CODE:
-                    self.StockDisplayBox.append("Stock Checking Paused.")
+                    self.appendToBox("Stock Checking Paused.")
                     self.queue.task_done()
                     self.should_continue = False
                     continue
                 pages = list(executor.map(stock_checker.fetch_content, links))
                 for i in range(len(pages)):
                     if not self.queue.empty() and self.queue.get() == STOP_CODE:
-                        self.StockDisplayBox.append("Stock Checking Paused.")
+                        self.appendToBox("Stock Checking Paused.")
                         self.should_continue = False
                         self.queue.task_done()
                         break
                     if stock_checker.is_in_stock(pages[i], stock_checker.get_relevant_dict(storemap[links[i]])):
                         # TODO Make colored stock messages (Out of stock = red, instock = green)
-                        self.StockDisplayBox.append(links[i] + " Is in stock!!!")
+                        self.appendToBox(links[i] + " Is in stock!!!")
                         stock_checker.playsound(stock_checker.SOUNDPATH)
                     else:
                         self.StockDisplayBox.append(links[i] + " Out of stock")
@@ -119,3 +122,10 @@ class StockWindow(QWidget):
         self.should_not_stop = False
         self.sleep_interrupt.set()
         self.close()
+
+    def appendToBox(self, msg : str) -> None:
+        ''' Appends the corresponding message to self.StockDisplayBox. '''
+        self.lock.acquire()
+        self.StockDisplayBox.append(msg)
+        self.lock.release()
+        return

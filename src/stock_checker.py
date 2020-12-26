@@ -63,7 +63,6 @@ def fetch_content(link : str):
     ''' Fetches the content of the URL corresponding to link. '''
     global browser_header
     page = requests.get(link, headers=browser_header)
-    print("Got a page: " + link)
     return page
 
 
