@@ -15,7 +15,6 @@ import main_window
 MAX_CONNECTIONS : int = 100
 
 STOP_CODE : int = 1
-CONTINUE_CODE : int = 2
 
 class StockWindow(QWidget):
     ''' Stock checking window.\n
@@ -32,6 +31,7 @@ class StockWindow(QWidget):
         self.sleepTime = sleepTime
         self.should_continue = True
         self.should_not_stop = True
+        self.sleep_interrupt = threading.Event()
         self.queue = Queue(maxsize=0)
         super().__init__()
         self.createUI()
@@ -40,6 +40,7 @@ class StockWindow(QWidget):
         
     
     def createUI(self) -> None:
+        ''' Creates the default UI for the StockWindow.  '''
         self.setWindowTitle("Stock Checker")
         self.setGeometry(0, 0, 800, 600)
 
@@ -62,21 +63,24 @@ class StockWindow(QWidget):
 
     
     def stop_start(self) -> None:
+        ''' Stops or starts the stock checking thread depending on the previous state. '''
         if self.StartStopButton.text() == "Start":
             if not self.queue.empty():
                 main_window.createAlert("Stock checking has not paused yet. Please wait.")
                 return
             self.should_continue = True
+            self.sleep_interrupt.clear()
             self.StockDisplayBox.append("Resumed checking stock.")
             self.StartStopButton.setText("Stop")
         else:
             self.queue.put(STOP_CODE)
+            self.sleep_interrupt.set()
             self.StockDisplayBox.append("Pausing...")
             self.StartStopButton.setText("Start")
         return
 
 
-    def check_stock(self):
+    def check_stock(self) -> None:
         ''' Checks the stock of the items in self.links and displays the results on the text area corresponding
         to self.StockDisplayBox. \n  '''
         links = self.links
@@ -106,11 +110,12 @@ class StockWindow(QWidget):
                         stock_checker.playsound(stock_checker.SOUNDPATH)
                     else:
                         self.StockDisplayBox.append(links[i] + " Out of stock")
-                sleep(sleep_time)
+                self.sleep_interrupt.wait(timeout=sleep_time)
     
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         print("Closing...")
         self.should_continue = False
         self.should_not_stop = False
+        self.sleep_interrupt.set()
         self.close()
