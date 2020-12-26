@@ -10,16 +10,11 @@ from fake_useragent import UserAgent
 from PyQt5.QtWidgets import QTextBrowser
 
 os.chdir("..")
-soundpath = os.getcwd() + "\\assets\\instock.mp3"
+SOUNDPATH = os.getcwd() + "\\assets\\instock.mp3"
 jsonfp = os.getcwd() + "\websites\\"
 
 user_agent = UserAgent()
 browser_header = {'User-Agent': user_agent.chrome}
-
-# TODO:
-    # Add amazon to supported list
-    # Either improve CLI or create a GUI
-        # Or both!
 
 # Take in an array of strings, find which retailer they are from, check based on the corresponding JSON.
 def check_stock(links : list, sleep_time : float, textarea : QTextBrowser, executor, storemap) -> None:
@@ -35,7 +30,7 @@ def check_stock(links : list, sleep_time : float, textarea : QTextBrowser, execu
         if is_in_stock(pages[i], get_relevant_dict(storemap[links[i]])):
             # In stock message is green
             textarea.append(links[i] + " Is in stock!!!")
-            playsound(soundpath)
+            playsound(SOUNDPATH)
         else:
             # Out of stock message is red
             textarea.append(links[i] + " Out of stock")
