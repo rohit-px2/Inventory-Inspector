@@ -3,4 +3,4 @@ __pycache__/
 plans.md
 src/build
 src/dist
-src/main.spec
+*.spec
