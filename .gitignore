@@ -1,3 +1,6 @@
 __pycache__/
 *.py[cod]
 plans.md
+src/build
+src/dist
+src/main.spec
