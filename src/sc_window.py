@@ -11,10 +11,27 @@ import threading
 from queue import Queue
 from time import sleep
 import main_window
+from html_parse import get_closing_tag
 
 MAX_CONNECTIONS : int = 100
 
 STOP_CODE : int = 1
+
+OOS_TEXT : str = " is Out of Stock" # comes after the item link
+INSTOCK_TEXT : str = " is IN STOCK!!!" 
+
+# Style for regular text, out-of-stock text, and in-stock text
+REG_TEXT_SS : str = "<p>"
+OOS_TEXT_SS : str = "<p style='color:red; float:left;'>"
+IS_TEXT_SS : str = "<p style='color:green; float:left;'>"
+
+# These tag endings are based on what the tags for the styles are.
+REG_TEXT_END : str = get_closing_tag(REG_TEXT_SS)
+OOS_TEXT_END : str = get_closing_tag(OOS_TEXT_SS)
+IS_TEXT_END : str = get_closing_tag(IS_TEXT_SS)
+
+OOS_MESSAGE = OOS_TEXT_SS + OOS_TEXT + OOS_TEXT_END
+INSTOCK_MESSAGE = IS_TEXT_SS + INSTOCK_TEXT + IS_TEXT_END
 
 class StockWindow(QWidget):
     ''' Stock checking window.\n
@@ -29,6 +46,7 @@ class StockWindow(QWidget):
     def __init__(self, links : list, sleepTime : float) -> None:
         self.links = links
         self.sleepTime = sleepTime
+        # Stock Checking event loop control variables
         self.should_continue = True
         self.should_not_stop = True
         self.sleep_interrupt = threading.Event()
@@ -55,6 +73,7 @@ class StockWindow(QWidget):
         self.StockDisplayBox.setOpenLinks(True)
         self.StockDisplayBox.append("Checking links:\n")
         self.StockDisplayBox.setAcceptRichText(True)
+        self.StockDisplayBox.setLineWrapMode(QTextEdit.NoWrap)
         self.StartStopButton = QPushButton("Stop")
         self.StartStopButton.clicked.connect(self.stop_start)
         # Adding widgets
@@ -73,7 +92,7 @@ class StockWindow(QWidget):
                 return
             self.should_continue = True
             self.sleep_interrupt.clear()
-            self.appendToBox("Resumed checking stock.")
+            self.appendToBox("Resumed checking stock.\n")
             self.StartStopButton.setText("Stop")
         else:
             self.queue.put(STOP_CODE)
@@ -81,8 +100,7 @@ class StockWindow(QWidget):
             self.appendToBox("Pausing...")
             self.StartStopButton.setText("Start")
         return
-
-
+    
     def check_stock(self) -> None:
         ''' Checks the stock of the items in self.links and displays the results on the text area corresponding
         to self.StockDisplayBox. \n  '''
@@ -109,11 +127,12 @@ class StockWindow(QWidget):
                         break
                     if stock_checker.is_in_stock(pages[i], stock_checker.get_relevant_dict(storemap[links[i]])):
                         # TODO Make colored stock messages (Out of stock = red, instock = green)
-                        self.appendToBox(links[i] + " Is in stock!!!")
+                        self.addInStockText(links[i])
                         stock_checker.playsound(stock_checker.SOUNDPATH)
                     else:
-                        self.StockDisplayBox.append(links[i] + " Out of stock")
+                        self.addOutOfStockText(links[i])
                 self.sleep_interrupt.wait(timeout=sleep_time)
+            sleep(0.05)
     
 
     def closeEvent(self, event) -> None:
@@ -123,9 +142,30 @@ class StockWindow(QWidget):
         self.sleep_interrupt.set()
         self.close()
 
+    def addOutOfStockText(self, link) -> None:
+        ''' Adds an "out of stock" message into the stock display box. Out of stock messages will have
+        "Out of stock", coloured in red, following the item link (whose font color is black). '''
+        html_text = "<a href=" + link + " style='float:left;'>" + link + "</a>" + OOS_MESSAGE
+        self.appendHTMLToBox(html_text)
+    
+    def addInStockText(self, link) -> None:
+        ''' Adds an "in stock" message to the stock display box. In stock messages are coloured in green. '''
+        html_text = REG_TEXT_SS + link + REG_TEXT_END + INSTOCK_MESSAGE
+        self.appendHTMLToBox(html_text)
+    
+    def appendHTMLToBox(self, msg : str) -> None:
+        ''' Appends the corresponding HTML message to self.StockDisplayBox.\n
+        Note: This does not add a newline, unlike appendToBox. '''
+        self.lock.acquire()
+        self.StockDisplayBox.insertHtml(msg + "<br>")
+        self.lock.release()
+
     def appendToBox(self, msg : str) -> None:
-        ''' Appends the corresponding message to self.StockDisplayBox. '''
+        ''' Appends the corresponding message to self.StockDisplayBox as plain text. '''
         self.lock.acquire()
         self.StockDisplayBox.append(msg)
         self.lock.release()
-        return
+
+
+
+

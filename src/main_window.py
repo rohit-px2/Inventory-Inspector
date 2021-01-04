@@ -51,7 +51,6 @@ class MainWindow(QWidget):
         ''' Changes the current window to the stock window.'''
         # TODO Add this to controller class?
         links : list[str] = self.LinksBox.toPlainText().split("\n")
-        valid_links = True
         # Catch bad URLs
         if not linksAreValid(links):
             createAlert("Please enter valid links.")
@@ -79,8 +78,3 @@ def createAlert(msg : str) -> None:
     alert.setWindowTitle("Error")
     alert.setText(msg)
     alert.exec_()
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    sys.exit(app.exec_())

@@ -1,13 +1,11 @@
+''' A library of functions to check the stock of items at certain electronics retailers. '''
 import json
 from time import sleep
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import requests
-from playsound import playsound
 from bs4 import BeautifulSoup
 import tldextract
 import os 
 from fake_useragent import UserAgent
-from PyQt5.QtWidgets import QTextBrowser
 
 os.chdir("..")
 SOUNDPATH = os.getcwd() + "\\assets\\instock.mp3"
@@ -15,27 +13,6 @@ jsonfp = os.getcwd() + "\websites\\"
 
 user_agent = UserAgent()
 browser_header = {'User-Agent': user_agent.chrome}
-
-# Take in an array of strings, find which retailer they are from, check based on the corresponding JSON.
-def check_stock(links : list, sleep_time : float, textarea : QTextBrowser, executor, storemap) -> None:
-    """ A function that checks whether the items in "links" are in stock (online only for now) or not.\n
-    Arguments:\n
-    - links: list[str]. The list of links to be checked. Each link is a str.\n
-    - sleep_time: float. The number of miliseconds to wait before checking again.\n
-    Returns: None
-    """
-    # Strings may contain "\n" at the end which we need to remove (if it's there) to get the URL.
-    pages = list(executor.map(fetch_content, links))
-    for i in range(len(pages)):
-        if is_in_stock(pages[i], get_relevant_dict(storemap[links[i]])):
-            # In stock message is green
-            textarea.append(links[i] + " Is in stock!!!")
-            playsound(SOUNDPATH)
-        else:
-            # Out of stock message is red
-            textarea.append(links[i] + " Out of stock")
-
-
 
 def remove_newlines(links : list) -> list:
     for i in range(len(links)):
