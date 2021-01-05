@@ -2,7 +2,6 @@
 stock_checker.py and html_parse.py. '''
 from testing_aid import *
 moveDirToSrcFolder()
-
 from stock_checker import *
 
 class TestStockCheck:
