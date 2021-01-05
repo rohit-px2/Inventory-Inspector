@@ -13,3 +13,9 @@ If your Python version is less than 3.2, you must run <code> > pip install futur
 not need to do anything. Then <br />
 <code> > cd src </code> <br />
 <code> > python main.py</code> to run. Enter the interval time and the program will begin checking stock!
+
+## Testing
+To run tests, you need [Pytest](https://pypi.org/project/pytest/). To install Pytest, type <br />
+<code> > pip install pytest </code>  into your console. Then to run the tests, navigate to the parent directory
+of the project and type <br>
+<code> > pytest </code>  to run the automated tests.
