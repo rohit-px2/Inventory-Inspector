@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import tldextract
 import os 
 from fake_useragent import UserAgent
+from playsound import playsound
 
 os.chdir("..")
 SOUNDPATH = os.getcwd() + "\\assets\\instock.mp3"

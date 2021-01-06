@@ -21,12 +21,10 @@ OOS_TEXT : str = " is Out of Stock" # comes after the item link
 INSTOCK_TEXT : str = " is IN STOCK!!!" 
 
 # Style for regular text, out-of-stock text, and in-stock text
-REG_TEXT_SS : str = "<p>"
 OOS_TEXT_SS : str = "<p style='color:red; float:left;'>"
 IS_TEXT_SS : str = "<p style='color:green; float:left;'>"
 
 # These tag endings are based on what the tags for the styles are.
-REG_TEXT_END : str = get_closing_tag(REG_TEXT_SS)
 OOS_TEXT_END : str = get_closing_tag(OOS_TEXT_SS)
 IS_TEXT_END : str = get_closing_tag(IS_TEXT_SS)
 
@@ -47,27 +45,31 @@ class StockWindow(QWidget):
         self.links = links
         self.sleepTime = sleepTime
         # Stock Checking event loop control variables
+        super().__init__()
+        self.createUI()
+        self.thread_init()
+        
+        
+    def thread_init(self):
+        ''' Initializes the necessary variables and worker thread to run the stock checking event loop.'''
         self.should_continue = True
         self.should_not_stop = True
         self.sleep_interrupt = threading.Event()
         self.queue = Queue(maxsize=0)
-        super().__init__()
-        self.createUI()
         self.work_thread = threading.Thread(target=self.check_stock)
         self.work_thread.start()
         # Since both threads (main & worker) are editing StockDisplayBox at the same time we need a lock
         # to keep it thread-safe (both threads don't access at the same time).
-        self.lock = threading.Lock()
-        
-    
+        self.text_lock = threading.Lock()
+
     def createUI(self) -> None:
         ''' Creates the default UI for the StockWindow.  '''
-        self.setWindowTitle("Stock Checker")
+        self.setWindowTitle("Inventory Inspector")
         self.setGeometry(0, 0, 800, 600)
 
         # Creating widgets
         self.layout = QVBoxLayout()
-        title = QLabel("Stock Checker")
+        title = QLabel("Inventory Inspector")
         self.StockDisplayBox = QTextBrowser()
         self.StockDisplayBox.setOpenExternalLinks(True)
         self.StockDisplayBox.setOpenLinks(True)
@@ -150,21 +152,21 @@ class StockWindow(QWidget):
     
     def addInStockText(self, link) -> None:
         ''' Adds an "in stock" message to the stock display box. In stock messages are coloured in green. '''
-        html_text = REG_TEXT_SS + link + REG_TEXT_END + INSTOCK_MESSAGE
+        html_text = "<a href=" + link + " style='float:left;'>" + link + "</a>" + INSTOCK_MESSAGE
         self.appendHTMLToBox(html_text)
     
     def appendHTMLToBox(self, msg : str) -> None:
         ''' Appends the corresponding HTML message to self.StockDisplayBox.\n
         Note: This does not add a newline, unlike appendToBox. '''
-        self.lock.acquire()
+        self.text_lock.acquire()
         self.StockDisplayBox.insertHtml(msg + "<br>")
-        self.lock.release()
+        self.text_lock.release()
 
     def appendToBox(self, msg : str) -> None:
         ''' Appends the corresponding message to self.StockDisplayBox as plain text. '''
-        self.lock.acquire()
+        self.text_lock.acquire()
         self.StockDisplayBox.append(msg)
-        self.lock.release()
+        self.text_lock.release()
 
 
 

@@ -22,12 +22,12 @@ class MainWindow(QWidget):
 
     def createDefaultUI(self) -> None:
         ''' Sets up the UI for the main window. '''
-        self.setWindowTitle("Stock Checker")
+        self.setWindowTitle("Inventory Inspector")
         self.setGeometry(0, 0, 800, 600)
 
         # Creating widgets
         self.layout = QVBoxLayout()
-        title = QLabel("Stock Checker")
+        title = QLabel("Inventory Inspector")
         self.LinksBox = QTextEdit()
         self.LinksBox.setPlaceholderText("Paste your links here...")
         self.sleepMessageBox = QHBoxLayout()
@@ -35,7 +35,7 @@ class MainWindow(QWidget):
         self.sleepInputBox = QLineEdit()
         self.sleepMessageBox.addWidget(sleepMessage)
         self.sleepMessageBox.addWidget(self.sleepInputBox)
-        self.SubmitButton = QPushButton("Start Checking!")
+        self.SubmitButton = QPushButton("Start Inspecting!")
         self.SubmitButton.clicked.connect(self.moveToStockWindow)
 
         # Adding widgets
