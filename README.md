@@ -3,6 +3,14 @@
 Inventory Inspector is a Python GUI tool made using PyQt5. The handling of links is done with a combination of BeautifulSoup and the integrated Requests library. <br>
 So far, the program supports Canada Computers, Newegg (CA), BestBuy (CA), and MemoryExpress, but more retailers may be added in the future.
 
+## Supported Websites
+<ul>
+	<li>Canada Computers</li>
+	<li>BestBuy (CA)</li>
+	<li>Newegg (CA)</li>
+	<li>Memory Express</li>
+</ul>
+
 ## Run Instructions
 Add the links you want to check into "links.txt", with a newline separating each link. <br />
 Then, run the following instructions in your command line (Windows): <br />
@@ -18,4 +26,4 @@ not need to do anything. Then <br />
 To run tests, you need [Pytest](https://pypi.org/project/pytest/). To install Pytest, type <br />
 <code> > pip install pytest </code>  into your console. Then to run the tests, navigate to the parent directory
 of the project and type <br>
-<code> > pytest </code>  to run the automated tests.
+<code> > pytest</code>  to run the automated tests.
