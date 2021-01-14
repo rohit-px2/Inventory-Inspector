@@ -1,4 +1,4 @@
-# Main (first) window
+''' Main (first) window of the Stock Checker application '''
 from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QMessageBox
 from sc_window import StockWindow
 import validators
@@ -7,11 +7,11 @@ import validators
 class MainWindow(QWidget):
     ''' The first window you see upon opening the application. \n
     Attributes:
-    - Title (QLabel) : The name of the program. \n
-    - LinksBox (QTextEdit) : The textarea to paste links. \n
-    - SubmitButton (QPushButton) : The button to start checking stock.\n
-    - sleepMessage (QLabel) : The label for the sleep input box\n
-    - sleepInputBox (QLineEdit) : The area to input the time to wait before checking again. Must be a number (float). \n
+    - Title (QLabel) : The name of the program.
+    - LinksBox (QTextEdit) : The textarea to paste links.
+    - SubmitButton (QPushButton) : The button to start checking stock.
+    - sleepMessage (QLabel) : The label for the sleep input box
+    - sleepInputBox (QLineEdit) : The area to input the time to wait before checking again. Must be a number (float).
     '''
 
     def __init__(self) -> None:
@@ -39,6 +39,7 @@ class MainWindow(QWidget):
         self.layout.addWidget(title)
         self.layout.addWidget(self.LinksBox)
         self.layout.addLayout(self.sleepMessageBox)
+        self.layout.addWidget(self.SubmitButton)
         self.setLayout(self.layout)
         self.show()
 

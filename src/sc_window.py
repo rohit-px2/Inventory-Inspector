@@ -7,6 +7,7 @@ from queue import Queue
 from time import sleep
 import main_window
 from html_parse import get_closing_tag
+from playsound import playsound
 
 MAX_CONNECTIONS: int = 100
 
@@ -128,7 +129,7 @@ class StockWindow(QWidget):
                     if stock_checker.is_in_stock(pages[i], stock_checker.get_relevant_dict(storemap[links[i]])):
                         # TODO Make colored stock messages (Out of stock = red, instock = green)
                         self.addInStockText(links[i])
-                        stock_checker.playsound(stock_checker.SOUNDPATH)
+                        playsound(stock_checker.SOUNDPATH)
                     else:
                         self.addOutOfStockText(links[i])
                 self.sleep_interrupt.wait(timeout=sleep_time)
