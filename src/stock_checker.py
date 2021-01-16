@@ -8,7 +8,7 @@ from fake_useragent import UserAgent
 
 os.chdir("..")
 SOUNDPATH = os.getcwd() + "\\assets\\instock.mp3"
-jsonfp = os.getcwd() + "\websites\\"
+jsonfp = os.getcwd() + "\\websites\\"
 
 user_agent = UserAgent()
 browser_header = {'User-Agent': user_agent.chrome}
@@ -33,7 +33,9 @@ def get_relevant_dict(domain: str) -> dict:
     - "newegg"
     - "memoryexpress"
     """
-    return json.load(open(jsonfp + domain + ".json"))
+    file = json.load(open(jsonfp + domain + ".json"))
+    print(file)
+    return file
 
 
 def fetch_content(link: str):
