@@ -28,3 +28,26 @@ class TestStockCheck:
     def test_gdn_two(self):
         domain = "youtube.com"
         assert stock_checker.get_domain_name(domain) == "youtube"
+
+    # Checking get_relevant_dict (grd)
+    def test_grd_one(self):
+        cc = {
+            "classCode": "pi-prod-availability",
+            "messages": [
+                "Not Available Online"
+            ]
+        }
+        assert stock_checker.get_relevant_dict("canadacomputers") == cc
+
+    def test_grd_two(self):
+        mx = {
+            "classCode": "c-capr-inventory-store",
+            "messages": [
+                "Out of Stock"
+            ]
+        }
+        assert stock_checker.get_relevant_dict("memoryexpress") == mx
+
+    # Checking fetch_content (fc)
+    def test_fc_one(self):
+        assert b"Python is a programming language" in stock_checker.fetch_content("http://python.org").content
