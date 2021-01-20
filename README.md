@@ -16,7 +16,7 @@ Add the links you want to check into "links.txt", with a newline separating each
 Then, run the following instructions in your command line (Windows): <br />
 <code>git clone https://github.com/rohit-px2/Inventory-Inspector.git Inventory-Inspector</code> <br />
 <code>cd Inventory-Inspector</code> <br />
-<code>pip install -r requirements.txt </code> to install requirements (only need to do this once) <br />
+<codepip install -r requirements.txt </code> to install requirements (only need to do this once) <br />
 If your Python version is less than 3.2, you must run <code> > pip install futures</code>. Otherwise you do
 not need to do anything. Then <br />
 <code>cd src</code> <br />
